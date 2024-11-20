@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search results</title>
+    <link rel="stylesheet" href="styles/resultado.css" />
+</head>
+
+<body>
+<div class="aura-background"></div>
+    <div class="container">
+        <h1 class="title">Search results</h1>
+
+        <% if (results.length===0) { %>
+            <p>No results.</p>
+            <% } else { %>
+
+                <h2 class="section-title">🎬 Movies</h2>
+                <ul class="result-list">
+                    <% let foundMovies=false; %>
+                        <% results.forEach((result)=> { %> <% if (result.type==='movie' ) { %>
+                                <li><a href="/pelicula/<%= result.id %>">
+                                        <%= result.name %>
+                                    </a></li>
+                                <% foundMovies=true; %>
+                                    <% } %>
+                                        <% }); %>
+                                            <% if (!foundMovies) { %>
+                                                <li>
+                                                    No movies found.
+                                                </li>
+                                                <% } %>
+                </ul>
+
+                <h2 class="section-title">🎭 Actors</h2>
+                <ul class="result-list">
+                    <% let foundActors=false; %>
+                        <% results.forEach((result)=> { %> <% if (result.type==='actor' ) { %>
+                                <li><a href="/actor/<%= result.id %>">
+                                        <%= result.name %>
+                                    </a></li>
+                                <% foundActors=true; %>
+                                    <% } %>
+                                        <% }); %>
+                                            <% if (!foundActors) { %>
+                                                <li>No actors found.</li>
+                                                <% } %>
+                </ul>
+
+                <h2 class="section-title">🎥 Directors</h2>
+                <ul class="result-list">
+                    <% let foundDirectors=false; %>
+                        <% results.forEach((result)=> { %> <% if (result.type==='director' ) { %>
+                                <li><a href="/director/<%= result.id %>">
+                                        <%= result.name %>
+                                    </a></li>
+                                <% foundDirectors=true; %>
+                                    <% } %>
+                                        <% }); %>
+                                            <% if (!foundDirectors) { %>
+                                                <li>
+                                                    No directors found.
+                                                </li>
+                                                <% } %>
+                </ul>
+
+                <% } %>
+
+        <div id="inicio"><a href="/">Home</a></div>
+    </div>
+</body>
+</html>

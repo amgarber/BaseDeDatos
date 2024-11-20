@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #003D3A;
+        }
+
+        /* Botón para agregar usuario */
+        .add-user-btn {
+            display: block;
+            margin: 0 auto 20px;
+            padding: 12px 24px;
+            background-color: #FDFBED;
+            color: #003D3A;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .add-user-btn:hover {
+            background-color: #FDFBED;
+            transform: translateY(-2px);
+        }
+
+        /* Contenedor de los usuarios */
+        .user-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Tarjeta de usuario */
+        .user-card {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .user-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .user-card p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        /* Botones de acción */
+        .user-card button {
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .user-card button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Botón editar */
+        .user-card button:nth-child(1) {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .user-card button:nth-child(1):hover {
+            background-color: #e0a800;
+        }
+
+        /* Botón eliminar */
+        .user-card button:nth-child(2) {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .user-card button:nth-child(2):hover {
+            background-color: #c82333;
+        }
+
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .add-user-btn {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            .user-card p {
+                font-size: 14px;
+            }
+
+            .user-card button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Usuarios</h1>
+
+        <% if (currentUserRole==='admin' ) { %>
+            <!-- Botón de administración para agregar usuario solo visible para admins -->
+            <a href="/user/add" class="add-user-btn">Agregar usuario</a>
+            <% } %>
+
+                <div class="user-selection">
+                    <% users.forEach((user)=> { %>
+                        <div class="user-card">
+                            <p>
+                                <%= user.user_username %> (<%= user.user_email %>)
+                            </p>
+
+                            <!-- Los botones de editar y eliminar solo son visibles para los administradores -->
+                            <% if (currentUserRole==='admin' ) { %>
+                                <button onclick="location.href='/user/edit/<%= user.user_id %>'">Editar</button>
+                                <button onclick="deleteUser('<%= user.user_id %>')">Eliminar</button>
+                                <% } %>
+                        </div>
+                        <% }) %>
+                </div>
+    </div>
+
+    <script>
+        async function deleteUser(userId) {
+            if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                console.log(userId)
+                fetch(`/user/${userId}`, { method: "DELETE" })
+                    .then((response) => {
+                        if (response.ok) {
+                            location.reload(); // Recarga la página para reflejar los cambios
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert('Error al eliminar el usuario');
+                    })
+
+            }
+        }
+    </script>
+
+</body>
+
+</html>
